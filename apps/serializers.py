@@ -74,9 +74,9 @@ class BookAmountSerializer(Serializer):
         instance.save()
         return instance
 
-class BookStatsSerializer(Serializer):
-    average_pages = DecimalField(decimal_places=2, max_digits=10, read_only=True)
-    total_books = IntegerField(read_only=True)
-    most_common_category = CharField(max_length=255, read_only=True)
-
-
+class TrendingCategorySerializer(ModelSerializer):
+    book_count = IntegerField(read_only=True)
+    class Meta:
+        model = Category
+        fields = ["id", "name", "book_count"]
+        read_only_fields = ["id", "name", "book_count"]

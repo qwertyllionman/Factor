@@ -1,3 +1,4 @@
+from django.db.models.aggregates import Count, Sum
 from drf_spectacular.utils import extend_schema
 from rest_framework import generics, filters, status
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView, \
@@ -8,7 +9,7 @@ from rest_framework.views import APIView
 
 from apps.models import Book, Category, Order, OrderItem, User, DeleteUser, Network
 from apps.serializers import BookSerializer, CategorySerializer, OrderSerializer, OrderItemSerializer, UserSerializer, \
-    DeleteUserSerializer, NetworkSerializer, OrderDetailSerializer, BookAmountSerializer
+    DeleteUserSerializer, NetworkSerializer, OrderDetailSerializer, BookAmountSerializer, TrendingCategorySerializer
 
 
 # ------------------------------- Book -------------------------------------
@@ -317,3 +318,32 @@ class GetOrderedAPIView(APIView):
         books = Book.objects.filter(category_id__in=categories)
         serializer = BookSerializer(books, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# ---------------------------------- Statistics --------------------------------------------
+@extend_schema(tags=['Statistics'])
+class BookStatsAPIView(APIView):
+    def get(self, request):
+        total_books = Book.objects.aggregate(total_books=Count('id'))['total_books']
+        pages = Book.objects.aggregate(Sum('page'))['page__sum']
+        average_pages = pages / total_books
+        most_common_category = Book.objects.values('category_id__name').annotate(Count('id')).order_by(
+            '-id__count').first()
+        most_common_category = most_common_category['category_id__name']
+        data = {"average_pages": average_pages, "total_books": total_books,
+                "most_common_category": most_common_category}
+        return Response(data, status=status.HTTP_200_OK)
+
+
+@extend_schema(tags=['Statistics'])
+class OrderStatsAPIView(APIView):
+    def get(self, request):
+        total_orders = Order.objects.aggregate(total_orders=Count('id'))['total_orders']
+        paid_orders = len(Order.objects.filter(payment_status='approved'))
+        pending_orders = len(Order.objects.filter(status="pending"))
+        data = {
+            "total_orders" : total_orders,
+            "paid_orders" : paid_orders,
+            "pending_orders" : pending_orders
+        }
+        return Response(data, status=status.HTTP_200_OK)

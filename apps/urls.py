@@ -7,7 +7,7 @@ from apps.views import CreateBookApiView, CreateCategoryApiView, GetCategoryList
     GetUserApiView, UpdateUserApiView, DeleteUserApiView, ListDeleteUserApiView, GetDeleteUserApiView, \
     CreateNetworkApiView, GetNetworkApiView, GetSerializerApiView, OrderDetailAPIView, CategoryBookAPIView, \
     ListAdminAPIView, UpdateBookAmountAPIView, SearchBookAPIView, SearchBookAuthorAPIView, SearchUserAPIView, \
-    GetOrderedAPIView
+    GetOrderedAPIView, BookStatsAPIView, OrderStatsAPIView, TrendingCategoryAPIView
 
 urlpatterns = [
     path('api/v1/book/create', CreateBookApiView.as_view()),
@@ -85,4 +85,11 @@ urlpatterns += [
     path("api/v1/book/author", SearchBookAuthorAPIView.as_view()),
     path("api/v1/user/lang", SearchUserAPIView.as_view()),
     path("api/v1/user/<int:user_id>/books", GetOrderedAPIView.as_view()),
+]
+
+# ---------------------------------- Statistics --------------------------------------------
+urlpatterns += [
+    path('api/v1/book/stats', BookStatsAPIView.as_view()),
+    path('api/v1/order/stats', OrderStatsAPIView.as_view()),
+    # path('api/v1/category/trending', TrendingCategoryAPIView.as_view()), # problem
 ]
