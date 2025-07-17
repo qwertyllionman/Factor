@@ -286,6 +286,7 @@ class UpdateBookAmountAPIView(UpdateAPIView):
 
 
 # -------------------------------- Filtering and Searching  ---------------------------
+
 @extend_schema(tags=['Filtering and Searching'])
 class SearchBookAPIView(ListAPIView):
     queryset = Book.objects.all()
@@ -321,6 +322,7 @@ class GetOrderedAPIView(APIView):
 
 
 # ---------------------------------- Statistics --------------------------------------------
+
 @extend_schema(tags=['Statistics'])
 class BookStatsAPIView(APIView):
     def get(self, request):

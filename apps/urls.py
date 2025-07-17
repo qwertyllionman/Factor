@@ -7,7 +7,7 @@ from apps.views import CreateBookApiView, CreateCategoryApiView, GetCategoryList
     GetUserApiView, UpdateUserApiView, DeleteUserApiView, ListDeleteUserApiView, GetDeleteUserApiView, \
     CreateNetworkApiView, GetNetworkApiView, GetSerializerApiView, OrderDetailAPIView, CategoryBookAPIView, \
     ListAdminAPIView, UpdateBookAmountAPIView, SearchBookAPIView, SearchBookAuthorAPIView, SearchUserAPIView, \
-    GetOrderedAPIView, BookStatsAPIView, OrderStatsAPIView, TrendingCategoryAPIView
+    GetOrderedAPIView, BookStatsAPIView, OrderStatsAPIView
 
 urlpatterns = [
     path('api/v1/book/create', CreateBookApiView.as_view()),
