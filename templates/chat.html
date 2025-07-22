@@ -25,7 +25,7 @@
             height: 700px;
             background: white;
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             display: flex;
             overflow: hidden;
         }
@@ -216,7 +216,7 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255,255,255,0.2);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -395,12 +395,8 @@
         }
 
         @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* Mobile responsive */
@@ -434,137 +430,146 @@
     </style>
 </head>
 <body>
-<div class="main-container">
-    <!-- Left Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div>
-                <div class="sidebar-title">Chat</div>
-                <div class="user-status" id="currentUserStatus">Foydalanuvchi tizimga kirmagan</div>
-            </div>
-        </div>
-
-        <div class="search-container">
-            <input type="text" class="search-input" placeholder="Foydalanuvchilarni qidirish..." id="searchInput">
-        </div>
-
-        <div class="users-list" id="usersList">
-            <div style="text-align: center; padding: 50px 20px; color: #666;">
-                <div class="loading-spinner"></div>
-                <p style="margin-top: 15px;">Foydalanuvchilar yuklanmoqda...</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Right Chat Area -->
-    <div class="chat-area">
-        <!-- Welcome Screen -->
-        <div class="welcome-screen" id="welcomeScreen">
-            <div class="welcome-icon">💬</div>
-            <div class="welcome-text">Chat-ga xush kelibsiz</div>
-            <div class="welcome-subtext">Suhbatni boshlash uchun foydalanuvchini tanlang</div>
-        </div>
-
-        <!-- Chat Container -->
-        <div class="chat-container" id="chatContainer">
-            <div class="chat-header">
-                <button class="chat-back-btn" id="backBtn" onclick="showSidebar()">←</button>
-                <div class="chat-user-info">
-                    <div class="chat-user-avatar" id="chatUserAvatar">A</div>
-                    <div class="chat-user-details">
-                        <h3 id="chatUserName">Foydalanuvchi</h3>
-                        <div class="chat-user-status" id="chatUserStatus">onlayn</div>
-                    </div>
+    <div class="main-container">
+        <!-- Left Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div>
+                    <div class="sidebar-title">Chat</div>
+                    <div class="user-status" id="currentUserStatus">Foydalanuvchi tizimga kirmagan</div>
                 </div>
-                <div class="connection-status" id="connectionStatus"></div>
             </div>
 
-            <div class="messages-container" id="messagesContainer">
-                <!-- Messages will be added here -->
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Foydalanuvchilarni qidirish..." id="searchInput">
             </div>
 
-            <div id="errorContainer"></div>
+            <div class="users-list" id="usersList">
+                <div style="text-align: center; padding: 50px 20px; color: #666;">
+                    <div class="loading-spinner"></div>
+                    <p style="margin-top: 15px;">Foydalanuvchilar yuklanmoqda...</p>
+                </div>
+            </div>
+        </div>
 
-            <div class="input-container">
-                <input type="text" id="messageInput" class="message-input" placeholder="Xabar yozing..." disabled>
-                <button id="sendBtn" class="send-btn" disabled>Yuborish</button>
+        <!-- Right Chat Area -->
+        <div class="chat-area">
+            <!-- Welcome Screen -->
+            <div class="welcome-screen" id="welcomeScreen">
+                <div class="welcome-icon">💬</div>
+                <div class="welcome-text">Chat-ga xush kelibsiz</div>
+                <div class="welcome-subtext">Suhbatni boshlash uchun foydalanuvchini tanlang</div>
+            </div>
+
+            <!-- Chat Container -->
+            <div class="chat-container" id="chatContainer">
+                <div class="chat-header">
+                    <button class="chat-back-btn" id="backBtn" onclick="showSidebar()">←</button>
+                    <div class="chat-user-info">
+                        <div class="chat-user-avatar" id="chatUserAvatar">A</div>
+                        <div class="chat-user-details">
+                            <h3 id="chatUserName">Foydalanuvchi</h3>
+                            <div class="chat-user-status" id="chatUserStatus">onlayn</div>
+                        </div>
+                    </div>
+                    <div class="connection-status" id="connectionStatus"></div>
+                </div>
+
+                <div class="messages-container" id="messagesContainer">
+                    <!-- Messages will be added here -->
+                </div>
+
+                <div id="errorContainer"></div>
+
+                <div class="input-container">
+                    <input type="text" id="messageInput" class="message-input" placeholder="Xabar yozing..." disabled>
+                    <button id="sendBtn" class="send-btn" disabled>Yuborish</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<script>
-    let socket = null;
-    let isConnected = false;
-    let currentUser = null;
-    let selectedUser = null;
-    let allUsers = [];
+    <script>
+        let socket = null;
+        let isConnected = false;
+        let currentUser = null;
+        let selectedUser = null;
+        let allUsers = [];
 
-    const sidebar = document.getElementById('sidebar');
-    const welcomeScreen = document.getElementById('welcomeScreen');
-    const chatContainer = document.getElementById('chatContainer');
-    const usersList = document.getElementById('usersList');
-    const searchInput = document.getElementById('searchInput');
-    const messagesContainer = document.getElementById('messagesContainer');
-    const messageInput = document.getElementById('messageInput');
-    const sendBtn = document.getElementById('sendBtn');
-    const connectionStatus = document.getElementById('connectionStatus');
-    const errorContainer = document.getElementById('errorContainer');
-    const chatUserName = document.getElementById('chatUserName');
-    const chatUserAvatar = document.getElementById('chatUserAvatar');
-    const chatUserStatus = document.getElementById('chatUserStatus');
-    const currentUserStatus = document.getElementById('currentUserStatus');
+        const sidebar = document.getElementById('sidebar');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const chatContainer = document.getElementById('chatContainer');
+        const usersList = document.getElementById('usersList');
+        const searchInput = document.getElementById('searchInput');
+        const messagesContainer = document.getElementById('messagesContainer');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const connectionStatus = document.getElementById('connectionStatus');
+        const errorContainer = document.getElementById('errorContainer');
+        const chatUserName = document.getElementById('chatUserName');
+        const chatUserAvatar = document.getElementById('chatUserAvatar');
+        const chatUserStatus = document.getElementById('chatUserStatus');
+        const currentUserStatus = document.getElementById('currentUserStatus');
 
-    // Initialize the application
-    async function init() {
-        await getCurrentUser();
-        await loadUsers();
-        setupEventListeners();
-    }
-
-    // Get current user (you'll need to implement this based on your auth system)
-    async function getCurrentUser() {
-        try {
-
-            // Mock current user for demo
-            currentUser = JSON.parse('{{ request.user}}');
-
-            currentUserStatus.textContent = currentUser.fullname || currentUser.username;
-        } catch (error) {
-            console.error('Error getting current user:', error);
-            currentUser = {id: 1, username: 'demo_user', fullname: 'Demo User'};
+        // Initialize the application
+        async function init() {
+            await getCurrentUser();
+            await loadUsers();
+            setupEventListeners();
         }
-    }
 
-    // Load users from API
-    async function loadUsers() {
-        try {
+        // Get current user (you'll need to implement this based on your auth system)
+        async function getCurrentUser() {
+            try {
+                // This is a mock implementation - replace with your actual API call
+                // const response = await fetch('/api/current-user/');
+                // currentUser = await response.json();
 
-            allUsers = {{users_json | safe}};
+                // Mock current user for demo
+                currentUser = {
+                    id: 1,
+                    username: 'Abdulaziz',
+                    fullname: 'Joriy Foydalanuvchi',
+                    phone_number: '+998901234567',
+                    is_online: true
+                };
 
-            displayUsers(allUsers);
-        } catch (error) {
-            console.error('Error loading users:', error);
-            usersList.innerHTML = `
+                currentUserStatus.textContent = currentUser.fullname || currentUser.username;
+            } catch (error) {
+                console.error('Error getting current user:', error);
+                currentUser = { id: 1, username: 'demo_user', fullname: 'Demo User' };
+            }
+        }
+
+        // Load users from API
+        async function loadUsers() {
+            try {
+
+                allUsers = {{ users_json | safe }}
+
+                displayUsers(allUsers);
+            } catch (error) {
+                console.error('Error loading users:', error);
+                usersList.innerHTML = `
                     <div style="text-align: center; padding: 50px 20px; color: #ff4757;">
                         <p>Foydalanuvchilarni yuklashda xato</p>
                     </div>
                 `;
+            }
         }
-    }
 
-    // Display users in the sidebar
-    function displayUsers(users) {
-        if (users.length === 0) {
-            usersList.innerHTML = `
+        // Display users in the sidebar
+        function displayUsers(users) {
+            if (users.length === 0) {
+                usersList.innerHTML = `
                     <div style="text-align: center; padding: 50px 20px; color: #666;">
                         <p>Foydalanuvchilar topilmadi</p>
                     </div>
                 `;
-            return;
-        }
+                return;
+            }
 
-        usersList.innerHTML = users.map(user => `
+            usersList.innerHTML = users.map(user => `
                 <div class="user-item" onclick="selectUser(${user.id})" data-user-id="${user.id}">
                     <div class="user-avatar">
                         ${(user.fullname || user.username).charAt(0).toUpperCase()}
@@ -578,207 +583,207 @@
                     ${user.is_online ? '<div class="online-indicator"></div>' : ''}
                 </div>
             `).join('');
-    }
-
-    // Select a user to chat with
-    function selectUser(userId) {
-        selectedUser = allUsers.find(user => user.id === userId);
-        if (!selectedUser) return;
-
-        // Update UI
-        document.querySelectorAll('.user-item').forEach(item => {
-            item.classList.remove('active');
-        });
-        document.querySelector(`[data-user-id="${userId}"]`).classList.add('active');
-
-        // Show chat container
-        welcomeScreen.style.display = 'none';
-        chatContainer.classList.add('active');
-
-        // Update chat header
-        chatUserName.textContent = selectedUser.fullname || selectedUser.username;
-        chatUserAvatar.textContent = (selectedUser.fullname || selectedUser.username).charAt(0).toUpperCase();
-        chatUserStatus.textContent = selectedUser.is_online ? 'onlayn' : 'oxirgi marta ko\'rindi: ' + formatTime(selectedUser.last_seen || new Date());
-
-        // Clear messages and connect to WebSocket
-        messagesContainer.innerHTML = '';
-        connectToPrivateChat();
-
-        // Hide sidebar on mobile
-        if (window.innerWidth <= 768) {
-            sidebar.classList.remove('mobile-open');
-        }
-    }
-
-    // Connect to private chat WebSocket
-    function connectToPrivateChat() {
-        if (socket && isConnected) {
-            socket.close();
         }
 
-        if (!selectedUser || !currentUser) return;
+        // Select a user to chat with
+        function selectUser(userId) {
+            selectedUser = allUsers.find(user => user.id === userId);
+            if (!selectedUser) return;
 
-        const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const wsUrl = `${protocol}//localhost:8080/ws/private_chat/${selectedUser.id}/${currentUser.id}/`;
+            // Update UI
+            document.querySelectorAll('.user-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[data-user-id="${userId}"]`).classList.add('active');
 
-        socket = new WebSocket(wsUrl);
+            // Show chat container
+            welcomeScreen.style.display = 'none';
+            chatContainer.classList.add('active');
 
-        socket.onopen = function (event) {
-            isConnected = true;
-            connectionStatus.classList.add('connected');
-            messageInput.disabled = false;
-            sendBtn.disabled = false;
-            clearError();
+            // Update chat header
+            chatUserName.textContent = selectedUser.fullname || selectedUser.username;
+            chatUserAvatar.textContent = (selectedUser.fullname || selectedUser.username).charAt(0).toUpperCase();
+            chatUserStatus.textContent = selectedUser.is_online ? 'onlayn' : 'oxirgi marta ko\'rindi: ' + formatTime(selectedUser.last_seen || new Date());
 
-            addMessage('Suhbat boshlandi', false, true);
-        };
+            // Clear messages and connect to WebSocket
+            messagesContainer.innerHTML = '';
+            connectToPrivateChat();
 
-        socket.onmessage = function (event) {
-            const data = JSON.parse(event.data);
-            const message = data.message;
-
-            // Check if message is from current user or selected user
-            const isOwn = message.includes(`${currentUser.username} :`);
-            addMessage(message, isOwn);
-        };
-
-        socket.onclose = function (event) {
-            isConnected = false;
-            connectionStatus.classList.remove('connected');
-            messageInput.disabled = true;
-            sendBtn.disabled = true;
-
-            if (event.code !== 1000) {
-                showError('Ulanish uzildi. Qayta urinib ko\'ring.');
-                addMessage('Ulanish uzildi', false, true);
-            }
-        };
-
-        socket.onerror = function (error) {
-            showError('WebSocket xatosi yuz berdi.');
-            console.error('WebSocket error:', error);
-        };
-    }
-
-    // Send message
-    function sendMessage() {
-        const message = messageInput.value.trim();
-        if (!message || !isConnected || !selectedUser) return;
-
-        const fullMessage = `${currentUser.username} : ${message}`;
-
-        // Send to WebSocket
-        socket.send(JSON.stringify({
-            'message': fullMessage
-        }));
-
-        messageInput.value = '';
-    }
-
-    // Add message to chat
-    function addMessage(text, isOwn = false, isSystem = false) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'message' + (isOwn ? ' own' : '');
-
-        const bubbleDiv = document.createElement('div');
-        bubbleDiv.className = 'message-bubble';
-        bubbleDiv.textContent = text;
-
-        if (isSystem) {
-            bubbleDiv.style.background = '#95a5a6';
-            bubbleDiv.style.color = 'white';
-            bubbleDiv.style.fontStyle = 'italic';
-        }
-
-        const timeDiv = document.createElement('div');
-        timeDiv.className = 'message-time';
-        timeDiv.textContent = new Date().toLocaleTimeString('uz-UZ', {
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-
-        messageDiv.appendChild(bubbleDiv);
-        messageDiv.appendChild(timeDiv);
-        messagesContainer.appendChild(messageDiv);
-
-        // Scroll to bottom
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
-
-    // Search users
-    function searchUsers() {
-        const query = searchInput.value.toLowerCase().trim();
-        if (!query) {
-            displayUsers(allUsers);
-            return;
-        }
-
-        const filteredUsers = allUsers.filter(user =>
-            (user.fullname || user.username).toLowerCase().includes(query) ||
-            (user.phone_number || '').includes(query)
-        );
-
-        displayUsers(filteredUsers);
-    }
-
-    // Show error message
-    function showError(message) {
-        errorContainer.innerHTML = `<div class="error-message">${message}</div>`;
-        setTimeout(() => clearError(), 5000);
-    }
-
-    // Clear error message
-    function clearError() {
-        errorContainer.innerHTML = '';
-    }
-
-    // Format time
-    function formatTime(date) {
-        const now = new Date();
-        const diff = now - date;
-
-        if (diff < 60000) return 'hozir';
-        if (diff < 3600000) return Math.floor(diff / 60000) + ' daqiqa oldin';
-        if (diff < 86400000) return Math.floor(diff / 3600000) + ' soat oldin';
-        return Math.floor(diff / 86400000) + ' kun oldin';
-    }
-
-    // Show sidebar on mobile
-    function showSidebar() {
-        sidebar.classList.add('mobile-open');
-    }
-
-    // Setup event listeners
-    function setupEventListeners() {
-        messageInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
-
-        sendBtn.addEventListener('click', sendMessage);
-
-        searchInput.addEventListener('input', searchUsers);
-
-        // Click outside sidebar to close on mobile
-        document.addEventListener('click', function (e) {
-            if (window.innerWidth <= 768 &&
-                !sidebar.contains(e.target) &&
-                !e.target.classList.contains('chat-back-btn')) {
+            // Hide sidebar on mobile
+            if (window.innerWidth <= 768) {
                 sidebar.classList.remove('mobile-open');
             }
-        });
+        }
 
-        // Close WebSocket on page unload
-        window.addEventListener('beforeunload', function () {
+        // Connect to private chat WebSocket
+        function connectToPrivateChat() {
             if (socket && isConnected) {
                 socket.close();
             }
-        });
-    }
 
-    // Initialize the app when page loads
-    document.addEventListener('DOMContentLoaded', init);
-</script>
+            if (!selectedUser || !currentUser) return;
+
+            const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = `ws://10.40.7.136:8080/ws/private_chat/${selectedUser.id}/${currentUser.id}/`;
+
+            socket = new WebSocket(wsUrl);
+
+            socket.onopen = function(event) {
+                isConnected = true;
+                connectionStatus.classList.add('connected');
+                messageInput.disabled = false;
+                sendBtn.disabled = false;
+                clearError();
+
+                addMessage('Suhbat boshlandi', false, true);
+            };
+
+            socket.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                const message = data.message;
+
+                // Check if message is from current user or selected user
+                const isOwn = message.includes(`${currentUser.username} :`);
+                addMessage(message, isOwn);
+            };
+
+            socket.onclose = function(event) {
+                isConnected = false;
+                connectionStatus.classList.remove('connected');
+                messageInput.disabled = true;
+                sendBtn.disabled = true;
+
+                if (event.code !== 1000) {
+                    showError('Ulanish uzildi. Qayta urinib ko\'ring.');
+                    addMessage('Ulanish uzildi', false, true);
+                }
+            };
+
+            socket.onerror = function(error) {
+                showError('WebSocket xatosi yuz berdi.');
+                console.error('WebSocket error:', error);
+            };
+        }
+
+        // Send message
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message || !isConnected || !selectedUser) return;
+
+            const fullMessage = `${currentUser.username} : ${message}`;
+
+            // Send to WebSocket
+            socket.send(JSON.stringify({
+                'message': fullMessage
+            }));
+
+            messageInput.value = '';
+        }
+
+        // Add message to chat
+        function addMessage(text, isOwn = false, isSystem = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message' + (isOwn ? ' own' : '');
+
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = 'message-bubble';
+            bubbleDiv.textContent = text;
+
+            if (isSystem) {
+                bubbleDiv.style.background = '#95a5a6';
+                bubbleDiv.style.color = 'white';
+                bubbleDiv.style.fontStyle = 'italic';
+            }
+
+            const timeDiv = document.createElement('div');
+            timeDiv.className = 'message-time';
+            timeDiv.textContent = new Date().toLocaleTimeString('uz-UZ', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            messageDiv.appendChild(bubbleDiv);
+            messageDiv.appendChild(timeDiv);
+            messagesContainer.appendChild(messageDiv);
+
+            // Scroll to bottom
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Search users
+        function searchUsers() {
+            const query = searchInput.value.toLowerCase().trim();
+            if (!query) {
+                displayUsers(allUsers);
+                return;
+            }
+
+            const filteredUsers = allUsers.filter(user =>
+                (user.fullname || user.username).toLowerCase().includes(query) ||
+                (user.phone_number || '').includes(query)
+            );
+
+            displayUsers(filteredUsers);
+        }
+
+        // Show error message
+        function showError(message) {
+            errorContainer.innerHTML = `<div class="error-message">${message}</div>`;
+            setTimeout(() => clearError(), 5000);
+        }
+
+        // Clear error message
+        function clearError() {
+            errorContainer.innerHTML = '';
+        }
+
+        // Format time
+        function formatTime(date) {
+            const now = new Date();
+            const diff = now - date;
+
+            if (diff < 60000) return 'hozir';
+            if (diff < 3600000) return Math.floor(diff / 60000) + ' daqiqa oldin';
+            if (diff < 86400000) return Math.floor(diff / 3600000) + ' soat oldin';
+            return Math.floor(diff / 86400000) + ' kun oldin';
+        }
+
+        // Show sidebar on mobile
+        function showSidebar() {
+            sidebar.classList.add('mobile-open');
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
+            sendBtn.addEventListener('click', sendMessage);
+
+            searchInput.addEventListener('input', searchUsers);
+
+            // Click outside sidebar to close on mobile
+            document.addEventListener('click', function(e) {
+                if (window.innerWidth <= 768 &&
+                    !sidebar.contains(e.target) &&
+                    !e.target.classList.contains('chat-back-btn')) {
+                    sidebar.classList.remove('mobile-open');
+                }
+            });
+
+            // Close WebSocket on page unload
+            window.addEventListener('beforeunload', function() {
+                if (socket && isConnected) {
+                    socket.close();
+                }
+            });
+        }
+
+        // Initialize the app when page loads
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
 </body>
 </html>

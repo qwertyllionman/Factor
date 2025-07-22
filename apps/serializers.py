@@ -44,7 +44,7 @@ class UserSerializer(ModelSerializer):
     orders = OrderSerializer(many=True, read_only=True)
     class Meta:
         model = User
-        fields = ['id','username','fullname','lang','phone_number','is_admin', 'created_at', 'updated_at', 'orders']
+        fields = "__all__"
         read_only_fields = ['created_at', 'updated_at', 'id']
 
 class DeleteUserSerializer(ModelSerializer):
