@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-f92swi66l6_$unh!0z$ak*k+cstuy$$@mw1_+*!eswx7o&ddp-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'apps',
     'rest_framework',
     'drf_spectacular',
-    'django_filters'
+    'django_filters',
+    'chat',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -142,4 +144,13 @@ SPECTACULAR_SETTINGS = {
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
     'COMPONENT_SPLIT_REQUEST': True,
+}
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.0.1', 6379)],
+        },
+    },
 }

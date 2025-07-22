@@ -1,6 +1,7 @@
+
 import pytest
 
-from apps.models import Category, User
+from apps.models import Category, User, Book
 from rest_framework.test import APIClient
 
 
@@ -91,3 +92,14 @@ class TestCategory:
         # assert re.json().get("id") == 1 # the same
         # re1
         assert re1.status_code == 404
+
+
+class TestBook:
+    @pytest.fixture
+    def api_client(self):
+        Book.objects.create(name="Book", user_id=1)
+        Book.objects.create(name="Texnika", user_id=1)
+        Book.objects.create(name="Home", user_id=1)
+        Book.objects.create(name="C1", user_id=1)
+        Book.objects.create(name="C2", user_id=1)
+

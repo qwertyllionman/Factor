@@ -19,6 +19,9 @@ class User(AbstractUser):
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
     is_admin = BooleanField(default=False)
+    is_online = BooleanField(default=False)
+    last_message = TextField(null=True, blank=True)
+    last_message_time = DateTimeField(auto_now=True)
     phone_number = CharField(max_length=255, null=True, blank=True)
 
 
